@@ -8,6 +8,20 @@ and — with equal prominence — what was not.**
 > measured. Anything unmeasured is labelled as such. A project's failed attempt
 > is as visible as its successful one.
 
+## AI-assisted development
+
+Claude Code is one of the tools I use in a broader **multi-model engineering workflow**.
+I use different models for implementation, research, critique, and independent review,
+while tests, explicit acceptance criteria, and human verification determine whether a
+change is accepted.
+
+The point of the workflow is not to attribute a project to a single model. It is to make
+AI-assisted work inspectable: tasks are bounded, claims are checked at the source, and
+important changes are verified before they become project truth.
+
+**[How these systems were built](docs/ai-workflow.md)** documents the full method:
+specification, delegation, independent verification, mutation proof, and record keeping.
+
 ## Read this first
 
 **[Verification principles](docs/verification-principles.md)** — the claim these
