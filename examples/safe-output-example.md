@@ -30,6 +30,10 @@ while its justification disappears — cannot happen quietly.
 }
 ```
 
+The field names are Turkish in the source: `kazanim` is the outcome a plan
+promised, `kanit` is the evidence for it. They are left verbatim here rather
+than translated, because these are the literal keys the schema validates.
+
 Four properties are load-bearing:
 
 1. **Two values only.** `PROVEN` or `UNPROVEN`. There is no `PARTIAL`, no
