@@ -1,93 +1,96 @@
-# Doğrulama ilkeleri
+# Verification principles
 
-Bu vitrindeki projelerin ortak tezi tek cümleyle:
+The claim these projects share, in one sentence:
 
-> **Bir etiket, altındaki işin yapıldığının kanıtı değil, yalnızca iddiasıdır.**
+> **A label is not evidence that the work beneath it was done. It is only the
+> assertion that it was.**
 
-Aşağıdaki ilkelerin her biri bir tercihten değil, **bir hatadan** doğdu. Her
-maddenin altında onu doğuran ölçüm var.
+None of the principles below is a preference. Each came from a mistake, and each
+is recorded here with the measurement that produced it.
 
-## 1. Etiket kanıt değildir
+## 1. A label is not evidence
 
-`DONE`, `PASS`, `RESOLVED`, `IN_PROGRESS` — hepsi iddiadır. Aktarmadan önce
-içeriğinin o etiketi hak ettiği doğrulanır.
+`DONE`, `PASS`, `RESOLVED`, `IN_PROGRESS` are assertions. Before repeating one,
+verify that what sits beneath it earns it.
 
-*Doğuran ölçüm:* Üç ayrı yerde aynı gün: `DONE` işaretli bir görevin değişiklik
-listesi boştu; `DONE` işaretli iki tasarım kaydının üretimde çağıranı yoktu;
-`IN_PROGRESS` bir görevin gövdesi şablon metniydi. Üçünü de ölçüm yakaladı,
-hiçbirini etiket yakalamadı.
+*The measurement:* three places on the same day. A task marked `DONE` had an
+empty change list. Two design records marked `DONE` had no production caller.
+A task marked `IN_PROGRESS` had a body that was still the template text. All
+three were caught by measurement; none by the label.
 
-## 2. Geçen test, doğru şeyi ölçtüğünün kanıtı değildir
+## 2. A passing test is not proof that it measures the right thing
 
-Bir testin kusuru gerçekten yakaladığı, **kusurlu kodu geri koyup testin
-düştüğü görülerek** kanıtlanır.
+That a test catches a defect is proven by **putting the defect back and watching
+the named test fail.**
 
-*Doğuran ölçüm:* Bir determinizm testi aynı süreçte tekrar çağrı yapıyordu; hash
-tohumu süreç başına sabit olduğu için bozuk kodda da geçiyordu. Başka bir vakada
-bir test, yakaladığını iddia ettiği kusuru değil, kusurun **yan etkisini**
-ölçüyordu.
+*The measurement:* a determinism test called twice inside one process. The hash
+seed is fixed per process, so the test passed against broken code too. In
+another case a test caught not the defect it claimed, but the defect's *side
+effect* — repairing an empty field left a different field unowned, and the test
+was reading that.
 
-## 3. Bir modelin çıktısı, kendi iddiasının kanıtı olamaz
+## 3. A model's output cannot be evidence for its own claim
 
-Bir modelin "yaptım" demesi, yapıldığının kanıtı değildir. Kanıt bir
-`dosya:satır`, bir test kimliği veya bir komut logudur.
+A model saying "done" is not proof that it is done. Evidence is a `file:line`,
+a test identifier, or the log of a command that ran.
 
-*Uygulanışı:* Partitür'ün denetim şemasında `worker_says` diye bir kanıt tipi
-yoktur ve eklenmeyecektir. Bir worker'ın özeti, kayıt sisteminde
-`MODEL_ASSERTION` sınıfına girer — yani *o iddianın yapıldığının* kanıtıdır,
-iddianın doğruluğunun değil.
+*In practice:* the audit schema in Partitür has no `worker_says` evidence type
+and will not get one. A worker's summary is classed as `MODEL_ASSERTION` — that
+records the fact that the claim was made, not that it is true.
 
-## 4. Yokluk kanıt değildir
+## 4. Absence is not evidence
 
-Sıfır bulgu, güvenlik kanıtı değildir. Sınır çalıştırılmadan alınan temiz sonuç,
-yalnızca sınırın çalıştırılmadığını gösterir.
+Zero findings is not proof of safety. A clean result obtained without exercising
+the boundary shows only that the boundary was not exercised.
 
-*Uygulanışı:* "Kıramadım" bir iddiadır ve kanıtı **denemelerin logudur**. Bir
-tarama aracının çökmesi, `could-not-scan` sonucu üretmeli ve sıfırdan farklı bir
-çıkış kodu döndürmelidir — yoksa çağıran onu "temiz" sanar.
+*In practice:* "I could not break it" is a claim whose evidence is the log of
+what was attempted. A scanner that fails must produce a `could-not-scan` result
+and a non-zero exit code, or its caller will read the failure as a clean scan.
 
-## 5. Tespit ile doğrulama aynı şey değildir
+## 5. Detection and confirmation are different numbers
 
-`detection` bir adaydır. `confirmed` bir kanıttır. İkisi tek sayıda birleşmez.
+`detection` is a candidate. `confirmed` is evidence. They do not collapse into
+one figure.
 
-*Doğuran ölçüm:* Bir tarayıcı kendi geliştirme setinde **15/15 detection** ve
-**0/15 confirmed** verdi. İki sayıyı da yazmak, ilkini yazıp ikincisini
-atlamaktan daha az etkileyici ve daha doğrudur.
+*The measurement:* on its own development corpus a scanner reported
+**15/15 detection and 0/15 confirmed.** Publishing both is less impressive and
+more true than publishing the first and omitting the second.
 
-## 6. Kendi türetme setindeki sonuç doğrulama sayılmaz
+## 6. A result on the set that produced a policy does not validate it
 
-Bir politikayı üreten veri, o politikayı doğrulayamaz. Held-out set olmadan
-genelleme yapılmaz.
+The data that produced a policy cannot confirm it. No generalisation without a
+held-out set.
 
-*Doğuran ölçüm:* Bir yönlendirme politikası kendi türetme setinde tutarlı
-sonuçlar verdi. Held-out bir hedefte ölçüldüğünde, politikanın dayandığı temel
-gözlem **tersine döndü** — çünkü türetme setindeki görev metinleri, ölçülen
-davranışı yapay olarak gereksiz kılıyordu.
+*The measurement:* a routing policy was consistent on its own derivation set.
+Measured against a held-out target, the observation the policy rested on
+**reversed** — the derivation set's task descriptions happened to make the
+measured behaviour unnecessary.
 
-## 7. Çökme, tek başına güvenlik bulgusu değildir
+## 7. A crash alone is not a security finding
 
-Bir bulgu için üç şart birden gerekir: **yasak etki adlandırılmış**, etki
-**tekrar üretilmiş**, ve **normal kontrol** aynı yolda çalışıp etkiyi
-üretmemiş. Üçü yoksa elde bir gözlem vardır, bulgu yoktur.
+A finding requires three things together: the forbidden effect is **named**, the
+effect is **reproduced**, and a **control run** on the same path did not produce
+it. Without all three there is an observation, not a finding.
 
-## 8. Bir düzeltme, sözü değiştiremez
+## 8. A repair may not change the promise
 
-Bir iş başarısız olduğunda düzeltilen şey **nasıl yapıldığıdır**, ne söz
-verildiği değil. Sınavı geçemeyince soruyu değiştirmek, düzeltme değildir.
+When work fails, what gets repaired is *how it was done* — never *what was
+promised*. Editing the claim after failing the exam is changing the question.
 
-*Uygulanışı:* Partitür'de kazanım listesi dondurulur ve karması kaydedilir.
-Düzeltme turu görevleri değiştirebilir; kazanımlara dokunan bir öneri
-**tümüyle reddedilir**, ayıklanmaz.
+*In practice:* Partitür freezes the outcome list and records its digest. A
+correction round may change the tasks; a proposal that touches the outcomes is
+rejected whole rather than filtered.
 
-## 9. Ölçüm sırasında ölçüm aleti tamir edilmez
+## 9. The instrument is not repaired mid-measurement
 
-Bir kampanya sırasında bulunan kusur kaydedilir, düzeltilmez. Aleti çalışırken
-onarmak, ölçtüğü şeyi değiştirir.
+A defect found during a campaign is recorded, not fixed. Repairing the
+instrument while it runs changes what it is measuring.
 
-## 10. Başarısızlık da yayımlanır
+## 10. Failures are published too
 
-Bu vitrinin en somut örneği: Partitür ilk gerçek kampanyasında kendi motoruna
-koşturuldu ve **işi bitiremedi** — üç kazanımın üçü de kanıtlanmadı, birleştirme
-reddedildi, ve kampanyanın dayandığı öncül ölçüm sonucu çürüdü.
+The most concrete example in this showcase: Partitür was run against its own
+engine in its first real campaign and **did not finish the job.** All three
+outcomes ended unproven, the merge was refused, and the premise the campaign
+rested on was falsified by the campaign's own logs.
 
-Ayrıntısı: [başarısız kampanya](../examples/failed-campaign.md).
+Details: [a campaign that failed](../examples/failed-campaign.md).

@@ -1,154 +1,165 @@
-# Yapay zekâ ile çalışma yöntemi
+# How these systems were built
 
-Bu vitrindeki sistemler bir kişi tarafından, birden çok modele iş dağıtılarak
-inşa edildi. Aşağıdaki yöntem tasarlanarak değil, **hatalardan damıtılarak**
-oluştu; her maddenin altında onu doğuran ölçüm var.
+These systems were built by one person delegating work to several models. The
+method below was not designed; it was **distilled from mistakes**, and each rule
+carries the measurement that produced it.
 
-Tek cümlelik özeti: **modele iş yaptırmak ucuz, yaptığını doğrulamak pahalıdır —
-ve yöntemin tamamı bu pahalı kısmı ehlileştirmekle ilgilidir.**
-
----
-
-## Döngü
-
-```
-şartname  →  delegasyon  →  bağımsız doğrulama  →  mutasyonla kanıt  →  kayıt
-```
-
-Her adım bir öncekinin çıktısını **güvenilmeyen veri** olarak alır. Hiçbir
-adımda "model öyle dedi" bir gerekçe değildir.
-
-### 1. Şartname
-
-Her iş, kendi kendine yeten bir şartname ile başlar: bağlam sıfırdan kurulur,
-başka bir sohbete atıf yapılmaz. İçinde şunlar bulunur:
-
-- **Bağlayıcı kurallar** — tercihler değil, projenin varlık sebebi olan kısıtlar.
-- **Görevler**, her biri açık imza listesiyle. *Dönüş tipi tam verilir;
-  düzyazıda anlatılıp imzada belirtilmeyen bir şey istenmemiş sayılır.*
-- **Adı belli kabul kapıları** — "iyi çalışsın" değil, "bozuk JSON'da sessizce
-  boş dönmüyor, hata veriyor".
-- **Yapılmayacaklar listesi.**
-- **Bitti sayılma koşulu**, ölçülebilir maddeler halinde.
-
-### 2. Delegasyon
-
-Ölçüt tek cümle:
-
-> **Nesnel bir kabul kapısı yazabiliyorsan alt modele ver.
-> Kapının kendisine karar vermek gerekiyorsa kendin yap.**
-
-Bu ölçüt bazen "hiçbirini delege etme" der ve o zaman delege edilmez. 3172
-satırlık bir kod taşımasında ölçüt uygulandığında sonuç şuydu: doğruluğu
-kanıtlanmış kodu bir modele yeniden yazdırmak, çalışan koda **transkripsiyon
-riski eklemekten** başka bir şey yapmaz.
-
-### 3. İkili delegasyon
-
-Saf, tek dosyalık, imzası açık görevler **aynı şartnameyle iki bağımsız modele**
-gönderilir ve çıktılar önce birbirine karşı okunur.
-
-> **İki bağımsız uygulamanın anlaştığı yer, şartnamenin sessiz kaldığı yerdir.**
-
-*Doğuran ölçüm:* Bir modül iki modele verildi. İkisi de aynı kimlik için iki
-çelişkili kayıt taşıyan bir girdiyi sessizce çözdü — biri ilkini aldı, diğeri
-sonuncusunu. İkisinin de testleri geçiyordu; ikisi de yanlıştı. Tek çıktı
-verildiğinde bu bir *tercih* gibi görünür; iki çıktı yan yana konduğunda
-*boşluk* olduğu görülür. Birleştirilen modül artık o girdiyi reddediyor:
-denetimin varmadığı bir hükmü modül icat edemez.
-
-Aynı desen ikinci bir fazda tekrarlandı. Yöntem tesadüf değil.
-
-### 4. Bağımsız doğrulama
-
-Alt model çıktısı **yeşil koşuyla kabul edilmez**. Rapordaki her olgusal ve
-sayısal iddia kaynağından doğrulanır: kod açılır, test koşturulur, hedef sayılır.
-
-*Doğuran ölçüm:* Bir raporda üç kusurun üçü de "yapıldı" diye geçiyordu.
-Belgede "en yaygın üç" yazan yer kodda rastgele seçim yapıyordu; adı
-"determinizm" olan test ölçtüğü şey o değildi; "yalnız `.ts` dosyaları" denen
-hedefte `.js` de vardı. Üçü de ancak bağımsız ölçümle çıktı.
-
-### 5. Mutasyonla kanıt
-
-Bir testin kusuru gerçekten yakaladığı, **kusurlu kodu geri koyup adı geçen
-testin düştüğü görülerek** kanıtlanır. Kabul kapısı başına en az bir mutasyon,
-listesi commit mesajında.
-
-Bu disiplinin en değerli anı, mutasyonun **kırmızıya dönmediği** andır:
-
-> Bir çıktı redaksiyon katmanında "önce redakte et, sonra kırp" mutasyonu
-> uygulandı ve test geçmeye devam etti. Sebep, mutasyonun doğru sıra olmasıydı;
-> kod yanlıştı. Çıktı sondan saklandığı için kesim sınırını aşan bir sır
-> `api_key=` önekini kaybediyor, redaksiyon deseni de tam o öneke bakıyordu.
-> Ölçüldü: `önce kırp → sızıntı var`, `önce redakte → sızıntı yok`.
-
-Mutasyon disiplini böylece ters yönde de çalışır: testin zayıflığını değil,
-kodun yanlışlığını gösterir.
+In one sentence: **getting a model to do work is cheap; verifying what it did is
+expensive — and the whole method is about domesticating the expensive half.**
 
 ---
 
-## Şartname, zincirin en zayıf halkasıdır
+## The loop
 
-Dört fazlık bir çalışmanın sonunda ölçülen şey şu oldu: **kusurların çoğu koddan
-değil, şartnameden çıktı.** Üç örnek, üçü de aynı yazarın:
+```
+specification → delegation → independent verification → mutation proof → record
+```
 
-| Hata | Sonucu |
+Every stage treats the previous stage's output as **untrusted data**. At no
+point is "the model said so" a reason.
+
+### 1. Specification
+
+Each unit of work starts from a self-contained brief: context built from
+nothing, no reference to another conversation. It contains:
+
+- **Binding rules** — not preferences, but the constraints the project exists to
+  enforce.
+- **Tasks with explicit signatures.** *Return types are stated exactly; anything
+  described in prose but absent from the signature was not asked for.*
+- **Named acceptance gates** — not "works well", but "a corrupt JSON file raises
+  instead of quietly returning an empty dict".
+- **A not-to-be-done list.**
+- **A definition of done**, in measurable items.
+
+### 2. Delegation
+
+One criterion:
+
+> **If you can write an objective acceptance gate for it, delegate it.
+> If deciding the gate is the work, do it yourself.**
+
+The criterion sometimes says *delegate nothing*, and then nothing is delegated.
+Applied to a 3,172-line code port, the answer was that having a model retype
+code whose correctness is already established adds **transcription risk to
+working code** and nothing else.
+
+### 3. Dual delegation
+
+Pure, single-file tasks with explicit signatures go to **two independent models
+from the same specification**, and the outputs are read against each other
+before either is read on its own merits.
+
+> **Where two independent implementations agree, the specification was silent.**
+
+*The measurement:* one module went to two models. Both silently resolved an
+input carrying two contradictory records for one identifier — one kept the
+first, the other kept the last. Both had passing tests. Both were wrong. Given
+one output this reads as a *choice*; placed side by side it is visibly a *gap*.
+The merged module now refuses that input: it will not invent a verdict the audit
+never reached.
+
+The same pattern recurred in a later phase. The method is not a coincidence.
+
+### 4. Independent verification
+
+Sub-model output is **not accepted on a green run.** Every factual and numeric
+claim in its report is verified at the source: open the code, run the test,
+count the targets.
+
+*The measurement:* a report listed three defects as fixed. The documentation
+said "the three most common" where the code chose at random; a test named
+"determinism" measured something else; a claim of "only `.ts` files" was made
+about a target that also contained `.js`. All three surfaced only under
+independent measurement.
+
+### 5. Mutation proof
+
+That a test catches a defect is proven by **putting the defect back and watching
+the named test fail.** At least one mutation per acceptance gate, listed in the
+commit message.
+
+The most valuable moment in this discipline is when a mutation **refuses to go
+red**:
+
+> A mutation applied to an output-redaction layer — "redact first, then
+> truncate" — left the test passing. The reason was that the mutation was the
+> correct order and the code was wrong. Output is kept from the end, so a secret
+> straddling the cut loses its `api_key=` prefix, and the redaction pattern
+> matches on exactly that prefix. Measured: `truncate-then-redact leaks`,
+> `redact-then-truncate does not`.
+
+So the discipline also runs backwards: instead of exposing a weak test, it
+exposes wrong code.
+
+---
+
+## The specification is the weakest link
+
+After four phases of work, the measured pattern was this: **defects came from
+the specification more often than from the code.** Three examples, all by the
+same author:
+
+| Mistake | Consequence |
 | --- | --- |
-| Envanter eksik bir aramayla çıkarıldı ve *"ölçüldü, tahmin değil"* diye sunuldu | Dört ifade gerçeğe dayanmadı; uygulayan taraf kaynağa karşı ölçüp düzeltti |
-| İmza `-> str` dedi, düzyazı "hüküm ve gerekçe" istedi | Çözüm bir `str` alt sınıfı oldu; `json.dumps` etiketi koruyup gerekçeyi **sessizce** düşürüyordu |
-| Şartname, ürünün **yapamadığı** bir akışı "atlanmayacak" ilan etti | İki adımın komut satırı karşılığı yoktu; akış elle bağlanmak zorunda kalındı |
+| An inventory derived from an incomplete search, presented as *"measured, not guessed"* | Four statements did not hold; the implementing side measured against the source and corrected them |
+| A signature said `-> str` while the prose asked for a verdict *and* a reason | The result was a `str` subclass whose `json.dumps` kept the label and **silently dropped** the reason |
+| A brief declared a flow "not to be skipped" that the product **could not perform** | Two of its steps had no command-line path; the flow had to be wired by hand |
 
-Çıkarılan kural: şartname yazan taraf da doğrulanır, ve şartnamenin kendisi bir
-kabul kapısına tabidir.
+The rule drawn from this: the party writing the specification is verified too,
+and the specification itself is subject to an acceptance gate.
 
-### Ve şartname ölçümü kirletebilir
+### And a specification can contaminate its own measurement
 
-Bir kampanyada üç olası politika şekli şartnameye yazılıp biri önerildi. Sonuçta
-planlayıcı modelin **muhakeme mi ettiği yoksa öneriyi mi tekrarladığı**
-ayrılamaz hale geldi. Aynı şey kanıt tipi tercihi için de oldu: kural prompt'a
-konduğu için ölçülen şey alışkanlık değil **itaat** oldu.
+In one campaign, three candidate policy shapes were written into the brief and
+one was recommended. Afterwards it became impossible to separate whether the
+planning model **reasoned** or **echoed the recommendation**. The same happened
+to an evidence-type preference: because the rule was in the prompt, what got
+measured was obedience rather than habit.
 
-> Ölçmek istediğin şeyi şartnameye yazarsan, ölçemezsin.
-
----
-
-## Ölçüm hijyeni
-
-Sonuç, alındığı ortam kadar geçerlidir.
-
-- **Temiz kabuk.** Testler `PYTHONPATH` ayarlı bir kabukta koşturulmaz. Bir
-  paket taşınırken geride kalan tek bir `import` yüzünden suite yeşil göründü;
-  temiz kabukta düşüyordu.
-- **Konsol komutu ayrıca denenir.** "pytest yeşil" ile "kurulu komut çalışıyor"
-  aynı şey değildir. Bir fazın tamamlandığı sanıldı, oysa paket sanal ortama
-  hiç kurulmamıştı; testler yalnızca kök dizin eklendiği için geçiyordu.
-- **Doğrulayan da ortamı kirletebilir.** Bir doğrulama sırasında `/tmp` altında
-  bırakılan bir dizin, yukarı doğru yürüyen bir kök arayıcısını yanılttı ve üç
-  test düştü. Kusur kodda değil, ölçende idi.
+> Write the thing you want to measure into the specification, and you can no
+> longer measure it.
 
 ---
 
-## Kayıt
+## Measurement hygiene
 
-**Şartname, ne istendiğinin kaydıdır ve yapılana uydurulmaz.** Bir uygulama
-şartnameden saparsa, sapma raporlanır; şartname geriye dönük düzeltilmez.
-Kaydı yapılana uydurmak, kaydı tahrif etmektir.
+A result is only as valid as the environment it was taken in.
 
-Her anlamlı iş bir iz bırakır: ya bir karar kaydı, ya bir kanıt kaydı, ya
-güncellenmiş bir durum dosyası. Kararlar gerekçeleriyle donar, böylece altı
-hafta sonra "bu neden böyle" sorusunun cevabı kalır.
+- **Clean shell.** Tests are not run with `PYTHONPATH` set. After a package
+  move, a single leftover import left a suite looking green; in a clean shell it
+  failed.
+- **The console command is exercised separately.** "pytest is green" and "the
+  installed command runs" are different claims. A phase was believed complete
+  while the package had never been installed into the virtualenv; the tests
+  passed only because the root directory was on the path.
+- **The verifier can contaminate the environment too.** A directory left under
+  `/tmp` during one verification misled an upward-walking project-root finder
+  and failed three tests. The defect was in the measurer, not the code.
 
 ---
 
-## Bu yöntemin bedeli
+## Records
 
-Dürüst olmak gerekirse: **bu yöntem hızlandırmaz.**
+**A brief is the record of what was asked, and it is never retrofitted to what
+was done.** When an implementation deviates, the deviation is reported; the
+brief is not edited backwards. Fitting the record to the outcome falsifies the
+record.
 
-Doğrulama maliyeti insan zamanıdır ve otomatikleşene kadar yok olmaz. Delege
-edilen bir modülde iki gerçek kusur bulundu — ikisini de yakalayan şey testler
-değil, elle inceleme oldu. "Delege et ve doğrula" çalışan kod üretti; ucuz
-üretmedi.
+Every meaningful piece of work leaves a trace: a decision record, an evidence
+record, or an updated state file. Decisions freeze with their reasoning, so that
+six weeks later the question "why is this like this" still has an answer.
 
-Kazanç başka yerde: **yanlış işe harcanan zaman azalır.** Bir kazanım
-kanıtlanmadığında bunu altı hafta sonra değil, aynı gün öğrenirsiniz.
+---
+
+## What this method costs
+
+Honestly: **it does not make anything faster.**
+
+Verification cost is human time and does not disappear until it is automated.
+Two real defects were found in one delegated module, and what caught both was
+review rather than tests. "Delegate and verify" produced working code; it did
+not produce it cheaply.
+
+The gain is elsewhere: **less time spent on the wrong work.** When an outcome is
+not proven, you learn it the same day rather than six weeks later.
