@@ -1,76 +1,75 @@
 # Partitür
 
-**Multi-model orchestration with a frozen outcome contract and an
-evidence-bound audit.**
+**Multi-model orchestration with frozen outcomes and evidence-bound verification.**
 
 > Private, in development.
 
-A *partitur* is the full score of a piece: every part written under every other,
-the thing the conductor reads and each player takes their line from — and the
-document against which "was it played correctly" is answered.
+A *partitür* is a score: the thing every player works from and the thing the final
+performance is judged against.
 
-Agent frameworks have a conductor. None of them has a score. That is the gap
-this project addresses.
-
-## The shape
-
-```
-directory → planner model → conversation → human approval
-  → PLAN-*.json  (tasks + OUTCOMES written, then frozen)
-  → dispatcher: parallel workers, isolated workspaces
-  → reviewer + merge gate
-  → AUDITOR: find evidence for each outcome → report
-  → human → planner: correction round, bound to the same score
-  → auditor clean → BREAKER: run it, try to break it
-```
+The project applies that idea to AI-assisted engineering. The planner writes the intended
+outcomes before implementation starts, those outcomes are frozen, workers execute against
+them, and later stages must produce evidence against the same frozen score.
 
 ## The binding rule
 
-The auditor cannot say `PASS`. It may only say:
+The auditor does not issue a vague `PASS`.
 
-- `PROVEN(evidence-ref)` — where evidence is a `file:line`, a test identifier,
-  or a command log, and the reference must resolve in version control
+For each outcome it can report only:
+
+- `PROVEN(evidence-ref)`
 - `UNPROVEN`
 
-There is no third value, and no partial credit. An outcome too large to answer
-as a binary must be split when the plan is written — deliberate pressure on the
-planner rather than a gap.
+Evidence references must resolve to concrete material such as version-controlled
+file/line references, test identifiers, or command logs.
 
-## Two ideas worth naming
+## Current workflow
 
-**The score does not move.** A correction round may change *how* the work is
-done and never *what was promised*. The outcome list is hashed at freeze time;
-a correction proposal that touches the outcomes is rejected whole rather than
-filtered. Editing the claim after failing the exam is changing the question.
+The current development line includes:
 
-**The differential gate.** A passing audit test is not proof that it measures
-anything. So every audit test runs twice: against the state *before* the change
-and *after*. Fail-then-pass is `PROVEN`. Passing on both sides means the test
-does not measure the outcome, and the verdict is `UNPROVEN`.
+1. planning and frozen outcome contracts
+2. parallel workers in isolated workspaces
+3. merge gating
+4. evidence-bound audit
+5. differential verification against before/after states
+6. correction rounds bound to the original frozen score
+7. a test-engineer / breaker stage for searching for regressions beyond the promised outcomes
+8. workflow and authority preflight surfaces
 
-## Measured state
+The repository currently records F7 and campaigns 02→05 as completed.
 
-- 553 tests, green in a clean shell with no `PYTHONPATH` set.
-- Governance record layer consumed as a library from AI-OS; operational data
-  kept in a separate namespace so that record schemas are never invented.
-- The breaker executes only commands a human declared in a charter file, matched
-  on an exact argument-vector prefix, with no shell.
+## The score does not move
 
-*Figures taken on 2026-09-08.*
+A correction round may change the implementation plan, but it may not rewrite the promised
+outcomes or their score digest.
 
-## Its first real campaign failed
+Only work that remains unproven is eligible for correction. Correction loops are bounded;
+running out of attempts leaves the remaining outcomes `UNPROVEN`.
 
-Partitür was pointed at its own engine and asked to change a policy in it. The
-result: **all three outcomes ended `UNPROVEN`**, the merge was refused, and the
-measurement the campaign rested on was falsified by the campaign's own logs.
+## Differential evidence
 
-The full account, including the six defects it found in itself and the three
-specification mistakes that shaped it, is
-[here](../examples/failed-campaign.md).
+A test passing after a change is not enough by itself.
 
-## What is not yet true
+For an audit test to count as evidence of the change, the project can require it to fail on
+the pre-change state and pass on the post-change state. Passing on both sides means the test
+did not demonstrate the claimed outcome.
 
-The auditor does not yet write its own audit tests. The machinery that would let
-it propose them exists and is tested, but it is not connected to the command
-line, so today the auditor **verifies proposed evidence** rather than **producing
-it**. Until that is wired, judgement still sits outside the system.
+## Breaker / test-engineer boundary
+
+The breaker asks a different question from the auditor: **what else did this change break?**
+
+It does not produce `PROVEN` / `UNPROVEN` verdicts and cannot rewrite the frozen score.
+Executable commands come from a human-declared charter and are run without a general shell.
+
+## What it does not claim
+
+- the frozen score guarantees that the original specification was good
+- a green implementation test automatically proves an outcome
+- zero breaker findings means the system is secure
+- correction rounds may redefine success after the work begins
+- the tool has unrestricted shell or write authority
+
+The project is designed to make specification, implementation, verification, and
+regression search separate stages rather than one model grading its own work.
+
+*Source status checked 2026-09-24.*

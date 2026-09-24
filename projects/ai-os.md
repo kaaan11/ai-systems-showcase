@@ -1,64 +1,59 @@
 # AI-OS
 
-**A layered governance and record engine for AI-assisted project work.**
+**A model-agnostic governance and execution layer for AI-assisted project work.**
 
-> Private, baseline released.
+> Private · released baseline; current development tree continues beyond the baseline.
 
-AI-OS answers a narrower question than its name suggests: *when an agent works
-on a project, what may it decide, what gets written down, and how does the human
-stay the authority?*
+AI-OS defines what an AI-assisted project may treat as durable truth, what requires
+human authority, and how model-backed execution is allowed to interact with project
+state.
 
-It is a written constitution — immutable principles, protocols, policies — plus
-the machinery that enforces the record-keeping those documents describe.
+Its core idea is simple: execution approval and persistence approval are different
+decisions.
 
-## What it actually provides
+## Current system
 
-**A record taxonomy with teeth.** Seven frozen families — Task, Question,
-Decision, Investigation, Evidence, Handoff, Report — each with a schema. The
-Evidence contract is the sharpest of them: it has a closed vocabulary for what
-*kind* of thing was obtained (`OBSERVATION`, `EXPERIMENT`, `MODEL_ASSERTION`,
-and others), it requires the observation itself rather than only its source, and
-it deliberately has **no conclusion field**. Interpretation is not evidence.
+The current development line includes:
 
-**A persistence gate.** A durable write requires a proposal, a passing
-nine-condition evaluation, and a human authorisation bound to the exact content
-— so approving a run is explicitly not approving whatever the run later
-produces.
+- seven structured record families: Task, Question, Decision, Investigation,
+  Evidence, Handoff, and Report
+- a nine-condition persistence gate
+- content-bound persistence authorization
+- deterministic project/context loading
+- Task creation, inspection, validation, and explicit lifecycle handling
+- read-only preflight through `aios explain` and `aios run --dry-run`
+- governed execution through `run` / `continue`
+- an opt-in multi-agent DAG workflow
+- model/API and native CLI worker paths
+- strict ruleset-version matching that fails closed on incompatible project state
 
-**Deterministic context loading with omission accounting.** Selecting what a
-worker sees is done by selection and omission over existing material, never by
-summarisation, and every omission is recorded with its reason.
+The base governance and record layer is intentionally separable from heavier execution
+dependencies.
 
-**An approval checkpoint that survives process death.** `AWAITING_APPROVAL` is a
-first-class state and work resumes from it.
+## The authority boundary
 
-## Measured state
+A run being authorized does **not** mean its output may become durable project truth.
 
-- 1,833 tests collected.
-- Base install depends only on a YAML parser; the record layer imports and runs
-  without the execution runtime, which is what makes it usable as a library.
+Durable writes require a separate authorization bound to the exact content. Task state
+changes and other governance transitions remain explicit operator actions rather than
+being inferred from model output.
 
-*Figures taken on 2026-09-08.*
+## Why this matters
 
-## What is not wired
+AI-assisted development can fail in subtle ways when temporary model output quietly
+becomes accepted project fact. AI-OS makes that transition visible and auditable.
 
-Two packages exist, are tested, and have **no production caller**: a governed
-tool boundary and a code indexer. A payload section for code context is defined
-and consumed but never populated by anything in production.
+It also tries to keep model choice replaceable: governance rules live in vendor-neutral
+documents and adapters, not in one provider's prompt format.
 
-The consequence is worth stating plainly: AI-OS has a constitution, a court and
-an archive, and no economy. It reasons about records, and it cannot read the
-project it governs.
+## What it does not claim
 
-That is also why it is listed here as what it is. Its record layer is genuinely
-used — [Partitür](partitur.md) consumes it as a dependency, and every durable
-write in that system goes through this gate. Its execution ambitions are not
-met, and the repository's own charter marks them `PLANNED / NOT IMPLEMENTED`.
+- no fully autonomous project governance
+- no implicit permission to persist whatever a worker produces
+- no automatic provider fallback or hidden routing
+- no claim that every future package in the architecture is already wired
 
-## The lesson it taught
+The project is best understood as a governed execution and record system with explicit
+human authority, not as a general autonomous-agent operating system.
 
-AI-OS was not written in vain; it was wired to the wrong place. Its real defect
-is ergonomic: it made the record a **precondition** of the work, and people want
-the record as a **by-product** of it. The schemas, protocols and gate survive
-intact in Partitür — what changed is who fills the record in. Not the human, but
-the run.
+*Source status checked 2026-09-24.*
