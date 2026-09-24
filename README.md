@@ -1,6 +1,6 @@
 # AI Systems — Showcase
 
-A portfolio of security, AI-safety research, and orchestration systems built over 2026.
+A portfolio of cybersecurity, AI-security research, and orchestration systems built over 2026.
 The code often lives in separate repositories. What lives here is **what was built,
 what was verified, and — with equal prominence — what has not been verified yet.**
 
