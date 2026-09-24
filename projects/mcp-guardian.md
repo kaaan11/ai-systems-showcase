@@ -4,63 +4,52 @@
 
 > Private, in development.
 
-MCP servers expose tools to a model. That makes them a trust boundary with an
-unusual shape: the caller is a language model, the arguments are model-authored,
-and the operations behind them are often ordinary system operations — file
-reads, process spawns, outbound requests, authorisation decisions.
+MCP servers expose tools and resources to model-authored calls. That creates security
+boundaries around authorization, state handles, outbound requests, command execution,
+file access, and other ordinary system operations.
 
-MCP Guardian statically maps that boundary: it finds entrypoints, follows call
-relationships into the operations behind them, and produces a prioritised
-**review queue** rather than a verdict list.
+MCP Guardian maps those boundaries and produces evidence for review rather than turning
+every static match into a vulnerability claim.
 
-## What it does
+## Current development line
 
-- Discovers MCP entrypoints across several framework adapters.
-- Resolves service boundaries by receiver, class, and import identity, so a
-  name collision does not become a false link.
-- Applies a rule set spanning Python and TypeScript/JavaScript sources.
-- Clusters candidates for review and hands each cluster to a dynamic oracle
-  where one applies.
-- Fails closed: an engine failure is recorded as a failure, never as a clean
-  scan.
+The current private development line includes:
 
-## The number it publishes about itself
+- static rules for Python and TypeScript/JavaScript
+- MCP framework and entrypoint recognition
+- risk normalization and ground-truth regression cases
+- bounded Docker-based dynamic probing
+- HTTP authentication and SSRF-oriented audit paths
+- authorization-topology analysis
+- state-handle / BOLA topology analysis
+- OAuth control-plane topology analysis
+- static-to-dynamic experiment manifests for narrow local validation recipes
 
-On its own development corpus:
+The project fails closed where possible: unresolved analysis is recorded as unresolved,
+not silently converted into a clean result.
 
-> **detection 15/15 · confirmed 0/15**
+## The important distinction
 
-Both numbers belong together. The first says the tool finds the places worth
-looking at. The second says that, on that corpus, it has not yet carried a
-single candidate across to a demonstrated boundary violation on its own.
+A static `missing` result is a **candidate for review**, not proof of a vulnerability.
 
-That gap is the tool's current frontier: it is good at *where should someone
-look*, and not yet an answer to *was the boundary actually crossed*. Publishing
-only the first number would be the failure this showcase exists to refuse.
+For example, an ownership check that cannot be seen statically does not become a BOLA
+finding by assertion. Confirmation requires an appropriate dynamic oracle, explicit
+target authorization, and evidence that the boundary was actually crossed.
 
-## Validation beyond its own corpus
+## Validation model
 
-The scanner has been exercised differentially against public MCP server
-repositories at the commit before and after a published, already-fixed
-vulnerability, checking that the finding appears on one side and not on the
-other. That is a ground-truth check against public history, not a discovery
-claim.
+Ground-truth checks use known vulnerable and fixed revisions where available.
+Dynamic validation is deliberately narrow and opt-in, with local/sandboxed targets and
+explicit recipes.
 
-## Measured state
+The output can also be normalized for evidence-first research workflows such as ArgusSec,
+without turning an unexecuted candidate into a confirmed finding.
 
-- 658 tests collected.
-- Rule sets for Python and TypeScript/JavaScript; five framework adapters.
-- A static-to-dynamic experiment bridge exists that emits preparation manifests
-  and can execute a narrow authorisation oracle against an explicitly allowed
-  local target. It never turns an unexecuted cluster into a confirmed finding.
+## Boundaries
 
-*Figures taken on 2026-09-08, with the working tree under active revision.*
+- The project is not distributed as a public scanner package.
+- Static absence is not treated as exploit proof.
+- Dynamic recipes are intentionally bounded; unsupported cases remain unresolved.
+- No external target is presented here as vulnerable merely because a rule matched.
 
-## Known limitations, stated
-
-- Scanning a single wrapper file can miss sibling service implementations; the
-  package or repository root is the correct scan target.
-- Static-analysis engine resolution depends on the environment's `PATH`, so a
-  campaign can silently run against a different analyser version unless it is
-  pinned.
-- A taint layer proving attacker-controlled data flow is not implemented.
+*Source status checked 2026-09-24.*
