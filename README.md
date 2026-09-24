@@ -62,8 +62,6 @@ specification, delegation to models, independent verification, mutation proof.
 | [Wazuh–IRIS SOC](projects/wazuh-iris-soc.md) | SOC automation, alert/case routing, enrichment, detection rules, and response controls | **Public**; personal-lab flows validated |
 | [EDR Telemetry Benchmark](projects/edr-telemetry-benchmark.md) | Windows benchmark separating action success, behavioural verification, and endpoint visibility | Private, in development |
 
-Earlier public work:
-[AiSOC](https://github.com/kaaan11/AiSOC).
 
 ## Examples
 
