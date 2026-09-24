@@ -4,55 +4,49 @@
 
 > Private, in development.
 
-Most fuzzing points at input. This one points the other way. When an application
-calls a language model, the model's *response* crosses back into the
-application: it gets parsed, streamed, matched against tool-call schemas, and
-dispatched. That return path is a trust boundary, and it is frequently treated
-as if it were internal data.
+Most fuzzing points at input. This project points at the return path from a model
+provider into an application: response parsing, SSE streaming, tool-call decoding,
+argument conversion, and dispatch.
 
-BackFlowFuzz mutates valid model responses and watches what the application does
-with them — response parsing, SSE streaming, and tool-dispatch layers.
+BackFlowFuzz mutates valid model responses and records what the target application
+actually does with them. The core design treats a crash and a security impact as
+different outcomes.
 
-## What it demonstrates
+## What it demonstrates now
 
-On a purpose-built simulation target the tool has shown, in one chain:
+The current development line reproduces three **already-published and already-patched**
+vulnerabilities in real open-source projects:
 
-- An input that genuinely triggers the dangerous behaviour.
-- The **observed effect** recorded rather than a bare crash.
-- **Exact replay** of the same input reproducing it on the vulnerable revision.
-- A **safe-twin differential**: the same input against the hardened equivalent
-  function, where the effect does not appear.
-- The full `source → transform → entrypoint → sink → effect` chain reported.
+| CVE | Ground-truth case | Current result |
+| --- | --- | --- |
+| CVE-2026-61539 | Xinference Llama3 tool-call parsing | reproduced; derived from benign seeds |
+| CVE-2025-9141 | vLLM qwen3coder parameter conversion | reproduced; derived from benign seeds |
+| CVE-2025-48887 | vLLM pythonic parser ReDoS | reproduced and measured |
+
+These are regression and ground-truth cases, **not original vulnerability discoveries**.
+
+The project also preserves the earlier acceptance properties:
+
+- observed effects are recorded instead of treating a bare crash as a finding
+- exact input replay is available for reproduction
+- vulnerable and patched/safe behaviour can be compared differentially
+- findings preserve the path from source input to sink and observed effect
+- the core control plane is offline and deterministic
 
 ## What that does and does not prove
 
-It proves the tool works. It does not prove field discovery.
+Reproducing published CVEs is stronger validation than a synthetic-only target because
+the tool must survive real parser and dispatch code. It still does not prove that the
+tool will discover new vulnerabilities in arbitrary projects.
 
-The simulation target's tests call functions directly; there is no production
-call chain from a real model provider in that setup. This is **tool validation**
-on a development and regression corpus, and it is recorded as such rather than
-presented as a field result.
-
-## Measured state
-
-- 748 tests; 658 run by default, 90 excluded as network-dependent.
-- No network is required for the core suite: everything runs on locally built
-  archives and directories.
-- Offline and deterministic by design.
-
-*Figures taken on 2026-09-08, with the working tree under active revision.*
-
-## A provenance mismatch, recorded rather than hidden
-
-The package reports version `0.2.0` while the project documentation describes
-v0.6 and v0.7 work. Until the version string and the documented state agree, any
-report this tool produces carries an ambiguous provenance line — and provenance
-is the thing an evidence-producing tool cannot be loose about. It is listed here
-because a showcase that omits it would be doing the thing this project exists to
-catch.
+A finding is not created merely because a parser throws an exception. The tool separates
+security effects, crash-only outcomes, and benign executions.
 
 ## Boundaries
 
-- No interaction with third-party services; the corpus is local.
-- Findings from real targets are not published here. See
-  [what is not here](../docs/what-is-not-here.md).
+- No model is required in the core fuzzing loop.
+- Core scans are designed to run offline.
+- Already-patched public CVEs are used as ground truth; they are not claimed as discoveries.
+- Unpublished third-party findings, if any, are not exposed through this showcase.
+
+*Source status checked 2026-09-24.*
