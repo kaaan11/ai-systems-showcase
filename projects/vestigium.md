@@ -1,4 +1,8 @@
-# MCP Guardian
+# Vestigium
+
+*Renamed on 2026-09-27 from MCP Guardian. The code repository (`mcp-guardian`), distribution package (`mcp-guardian-scanner`), and CLI commands (`mcp-guardian`, `mcptool`) still use their old names.*
+
+*Vestigium* is Latin for “trace” or “footprint”; the tool produces a review queue rather than a verdict list.
 
 **Security scanner and validation toolkit for Model Context Protocol servers.**
 
@@ -9,13 +13,13 @@ unusual shape: the caller is a language model, the arguments are model-authored,
 and the operations behind them are often ordinary system operations — file
 reads, process spawns, outbound requests, authorisation decisions.
 
-MCP Guardian statically maps that boundary: it finds entrypoints, follows call
+Vestigium statically maps that boundary: it finds entrypoints, follows call
 relationships into the operations behind them, and produces a prioritised
 **review queue** rather than a verdict list.
 
 ## What it does
 
-- Discovers MCP entrypoints across several framework adapters.
+- Discovers MCP entrypoints through framework adapters.
 - Resolves service boundaries by receiver, class, and import identity, so a
   name collision does not become a false link.
 - Applies a rule set spanning Python and TypeScript/JavaScript sources.
@@ -29,6 +33,8 @@ relationships into the operations behind them, and produces a prioritised
 On its own development corpus:
 
 > **detection 15/15 · confirmed 0/15**
+
+*Figures from the 2026-09-08 measurement; not re-measured for this refresh.*
 
 Both numbers belong together. The first says the tool finds the places worth
 looking at. The second says that, on that corpus, it has not yet carried a
@@ -46,21 +52,25 @@ vulnerability, checking that the finding appears on one side and not on the
 other. That is a ground-truth check against public history, not a discovery
 claim.
 
+*This validation statement is from the 2026-09-08 page and was not rechecked for this refresh.*
+
 ## Measured state
 
-- 658 tests collected.
-- Rule sets for Python and TypeScript/JavaScript; five framework adapters.
+- 1,000 tests collected.
+- Default run: 923 passed, 46 failed, 30 errors, 1 skipped.
+- Rule sets for Python and TypeScript/JavaScript; framework adapters.
 - A static-to-dynamic experiment bridge exists that emits preparation manifests
   and can execute a narrow authorisation oracle against an explicitly allowed
   local target. It never turns an unexecuted cluster into a confirmed finding.
 
-*Figures taken on 2026-09-08, with the working tree under active revision.*
+*Figures taken on 2026-09-27 at commit 1bea409 (origin/main).*
 
 ## Known limitations, stated
 
 - Scanning a single wrapper file can miss sibling service implementations; the
   package or repository root is the correct scan target.
-- Static-analysis engine resolution depends on the environment's `PATH`, so a
-  campaign can silently run against a different analyser version unless it is
-  pinned.
-- A taint layer proving attacker-controlled data flow is not implemented.
+- Static-analysis engine resolution can still select a different Semgrep binary
+  from `PATH` across runs; engine-identity helpers exist but are not yet wired
+  into the run path.
+- The existing taint rules are intra-file; cross-file attacker-controlled flow
+  is not established.

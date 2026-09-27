@@ -34,11 +34,12 @@ first-class state and work resumes from it.
 
 ## Measured state
 
-- 1,833 tests collected.
+- 1,833 tests collected on 2026-09-08; **not re-measured** because pytest is
+  unavailable in the source repository's `.venv`.
 - Base install depends only on a YAML parser; the record layer imports and runs
   without the execution runtime, which is what makes it usable as a library.
 
-*Figures taken on 2026-09-08.*
+*Repository inspected on 2026-09-27 at commit 6d38514 (origin/main).*
 
 ## What is not wired
 

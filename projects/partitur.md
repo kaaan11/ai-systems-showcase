@@ -50,13 +50,13 @@ does not measure the outcome, and the verdict is `UNPROVEN`.
 
 ## Measured state
 
-- 553 tests, green in a clean shell with no `PYTHONPATH` set.
+- 1,321 tests collected; default run: 1,311 passed, 10 skipped.
 - Governance record layer consumed as a library from AI-OS; operational data
   kept in a separate namespace so that record schemas are never invented.
 - The breaker executes only commands a human declared in a charter file, matched
   on an exact argument-vector prefix, with no shell.
 
-*Figures taken on 2026-09-08.*
+*Figures taken on 2026-09-27 at commit 9362cb7 (origin/master).*
 
 ## Its first real campaign failed
 
@@ -68,9 +68,8 @@ The full account, including the six defects it found in itself and the three
 specification mistakes that shaped it, is
 [here](../examples/failed-campaign.md).
 
-## What is not yet true
+## The audit-test proposer is now connected
 
-The auditor does not yet write its own audit tests. The machinery that would let
-it propose them exists and is tested, but it is not connected to the command
-line, so today the auditor **verifies proposed evidence** rather than **producing
-it**. Until that is wired, judgement still sits outside the system.
+`partitur audit` can load proposals from a file or ask a named model to propose
+tests. Each proposal still has to pass the differential gate before it can
+support a verdict.

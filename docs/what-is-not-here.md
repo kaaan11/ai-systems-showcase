@@ -51,7 +51,7 @@ content.
 
 ## Numbers in flux
 
-Three of the listed projects were under active revision while these pages were
-written. Every project page therefore carries the date its figures were taken
-and the state of the tree at that moment. A number without that line is a number
-you should not trust — including here.
+These pages are snapshots, not live status reports. Every project page carries
+the date of its measurement and the source commit; any older figure left in
+place is labelled with its original date or as not re-measured. A number without
+that context is a number you should not trust — including here.

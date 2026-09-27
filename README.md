@@ -21,9 +21,9 @@ specification, delegation to models, independent verification, mutation proof.
 
 | Project | What it does | Status |
 | --- | --- | --- |
-| [SlopLab](projects/sloplab.md) | Adversarial testing framework for vulnerability-report triage evaluators | **Public**, MIT, CI + releases |
-| [MCP Guardian](projects/mcp-guardian.md) | Security scanner and validation toolkit for Model Context Protocol servers | In development |
-| [BackFlowFuzz](projects/backflowfuzz.md) | Deterministic, offline fuzzer for the LLM model-output trust boundary | In development |
+| [SlopLab](projects/sloplab.md) | Adversarial testing framework for vulnerability-report triage evaluators | **Public**, MIT, CI + tagged releases |
+| [Vestigium](projects/vestigium.md) | Security scanner and validation toolkit for Model Context Protocol servers | In development |
+| [Hostis](projects/hostis.md) | Deterministic, offline fuzzer for the LLM model-output trust boundary | In development |
 | [Partitür](projects/partitur.md) | Multi-model orchestration with a frozen outcome contract and evidence-bound audit | In development |
 | [AI-OS](projects/ai-os.md) | Layered governance and record engine for AI-assisted project work | Baseline released |
 

@@ -11,9 +11,8 @@ The worker's tool discovery ran in two rounds. Round 0 was deterministic: paths
 named in the task instructions were read directly, no model call. Round 1 asked
 a model which tools it wanted with whatever call budget was left.
 
-A prior measurement on a held-out target had found round 1 to be **43–44% of
-total cost and to execute no tool at all.** The campaign's job was to act on
-that: remove round 1, or gate it.
+A prior measurement on a held-out target found round 1 made no tool calls. The
+campaign's job was to act on that: remove round 1, or gate it.
 
 ## The result: the work did not land
 
