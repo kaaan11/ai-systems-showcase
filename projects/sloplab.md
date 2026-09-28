@@ -9,11 +9,11 @@ SlopLab measures one question:
 
 > When a triage system receives a technically valid report that has been
 > degraded with missing evidence, inflated impact, or fabricated detail, does it
-> still classify the report correctly?
+> still classify the report consistently?
 
 As bug-bounty and vulnerability-report pipelines start leaning on automated
 triage, the failure mode that matters is not "does it find bugs" but "can it be
-talked out of a correct verdict". SlopLab degrades good reports on purpose and
+talked out of the verdict it just gave". SlopLab degrades good reports on purpose and
 measures how far a verdict moves.
 
 ## What it does

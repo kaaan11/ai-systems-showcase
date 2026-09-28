@@ -26,9 +26,9 @@ specification, delegation to models, independent verification, mutation proof.
 | [Hostis](projects/hostis.md) | Deterministic, offline fuzzer for the LLM model-output trust boundary | In development |
 | [Partitür](projects/partitur.md) | Multi-model orchestration with a frozen outcome contract and evidence-bound audit | In development |
 | [Tabularium](projects/tabularium.md) | Layered governance and record engine for AI-assisted project work | Baseline released |
+| [EDR Telemetry Benchmark](projects/edr-telemetry-benchmark.md) | Windows benchmark separating action success, behavioural verification, and endpoint visibility | In development |
 
 Also public, and older than this showcase:
-[AiSOC](https://github.com/kaaan11/AiSOC) ·
 [Wazuh-IRIS-SOC](https://github.com/kaaan11/Wazuh-IRIS-SOC)
 
 ## Examples
