@@ -52,9 +52,10 @@ and a non-zero exit code, or its caller will read the failure as a clean scan.
 `detection` is a candidate. `confirmed` is evidence. They do not collapse into
 one figure.
 
-*The measurement:* on its own development corpus a scanner reported
-**15/15 detection and 0/15 confirmed.** Publishing both is less impressive and
-more true than publishing the first and omitting the second.
+*The 2026-09-08 measurement, not re-measured for this refresh:* on its own
+development corpus a scanner reported **15/15 detection and 0/15 confirmed.**
+Publishing both is less impressive and more true than publishing the first and
+omitting the second.
 
 ## 6. A result on the set that produced a policy does not validate it
 
