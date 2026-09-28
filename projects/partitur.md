@@ -50,13 +50,14 @@ does not measure the outcome, and the verdict is `UNPROVEN`.
 
 ## Measured state
 
-- 1,321 tests collected; default run: 1,311 passed, 10 skipped.
-- Governance record layer consumed as a library from AI-OS; operational data
+- 1,321 tests collected; default run: 1,311 passed, 10 skipped, 39 warnings
+  in 136.80s.
+- Governance record layer consumed as a library from Tabularium; operational data
   kept in a separate namespace so that record schemas are never invented.
 - The breaker executes only commands a human declared in a charter file, matched
   on an exact argument-vector prefix, with no shell.
 
-*Figures taken on 2026-09-27 at commit 9362cb7 (origin/master).*
+*Figures taken on 2026-09-28 at commit 9362cb7 (origin/master).*
 
 ## Its first real campaign failed
 

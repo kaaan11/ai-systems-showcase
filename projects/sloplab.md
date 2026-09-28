@@ -42,11 +42,10 @@ require a model at all.
 
 ## Measured state
 
-- 1,118 tests collected; default run incomplete. Pytest stalled at 32% for over
-  30 minutes and was interrupted before it produced a final summary.
+- 1,118 tests collected; default run: 1,118 passed in 82.07s (0:01:22).
 - Corpus and benchmark-case counts are not re-measured.
 
-*Figures taken on 2026-09-27 at commit 5370ec0 (origin/main).*
+*Figures taken on 2026-09-28 at commit 5370ec0 (origin/main).*
 
 ## What is not claimed
 

@@ -56,14 +56,14 @@ claim.
 
 ## Measured state
 
-- 1,000 tests collected.
-- Default run: 923 passed, 46 failed, 30 errors, 1 skipped.
+- 1,000 tests collected; default run: 1,000 passed in 2313.19s (0:38:33).
+- GitHub CI succeeded on the same commit.
 - Rule sets for Python and TypeScript/JavaScript; framework adapters.
 - A static-to-dynamic experiment bridge exists that emits preparation manifests
   and can execute a narrow authorisation oracle against an explicitly allowed
   local target. It never turns an unexecuted cluster into a confirmed finding.
 
-*Figures taken on 2026-09-27 at commit 1bea409 (origin/main).*
+*Figures taken on 2026-09-28 at commit 1bea409 (origin/main).*
 
 ## Known limitations, stated
 

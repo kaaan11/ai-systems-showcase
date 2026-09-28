@@ -40,14 +40,14 @@ on a development and regression corpus, not a field result.
 
 ## Measured state
 
-- 1,443 tests selected from 1,534 collected; 91 are deselected by the default
-  marker.
-- Default run: 1,393 passed, 41 failed, 9 errors.
+- Default selection: 1,443 tests from 1,534 collected; 91 marked `slow` are
+  excluded by default.
+- Both self-hosted CI shards succeeded on the same commit.
 - No network is required for the core suite: everything runs on locally built
   archives and directories.
 - Offline and deterministic by design.
 
-*Figures taken on 2026-09-27 at commit d17ecaf (origin/main).*
+*Figures taken on 2026-09-28 at commit d17ecaf (origin/main).*
 
 ## A provenance mismatch, recorded rather than hidden
 
