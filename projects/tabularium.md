@@ -58,9 +58,9 @@ own records, while the human still selects tasks and authorizes durable changes.
 That is also why it is listed here as what it is. Its record layer is genuinely
 used — [Partitür](partitur.md) consumes it as a dependency, and every durable
 write in that system goes through this gate. The repository now runs its own
-worker pipeline; its charter still marks durable persistence through the
-nine-condition gate and continuation across process death as
-`PLANNED / NOT IMPLEMENTED`.
+worker pipeline against its own records; its charter still marks persisting a
+run's result through the nine-condition gate, and continuation across process
+death, as `PLANNED / NOT IMPLEMENTED`.
 
 ## The lesson it taught
 
