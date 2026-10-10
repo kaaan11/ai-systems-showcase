@@ -35,7 +35,7 @@ Two examples are intentionally explicit:
 - **LLM Security–Usability Benchmark** is listed because its pre-registration,
   controlled stimuli, review workflow, and audit trail exist. Its page also states that
   no model evaluation has been run and no empirical result exists yet.
-- **ArgusSec** is listed for its implemented research-workbench architecture and
+- **Probandum** is listed for its implemented research-workbench architecture and
   evidence model. Its presence is not a claim that it has discovered external
   vulnerabilities or that every planned workflow has been validated end to end.
 

@@ -72,4 +72,10 @@ Executable commands come from a human-declared charter and are run without a gen
 The project is designed to make specification, implementation, verification, and
 regression search separate stages rather than one model grading its own work.
 
-*Source status checked 2026-09-24.*
+## Measured state
+
+- 1,321 tests collected; 1,311 passed and 10 skipped in 136.80s.
+
+*Measurements taken on 2026-09-28 at commit 9362cb7 (origin/master).*
+
+*Source status checked 2026-09-28.*

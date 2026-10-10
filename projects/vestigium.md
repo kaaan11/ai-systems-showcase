@@ -1,4 +1,8 @@
-# MCP Guardian
+# Vestigium
+
+*Renamed on 2026-09-28 from MCP Guardian. The code repository (mcp-guardian), distribution package (mcp-guardian-scanner), and CLI commands (mcp-guardian, mcptool) still use their existing names.*
+
+*Vestigium* is Latin for “trace” or “footprint”; it names the traces the scanner gathers for a human review.
 
 **Security scanner and validation toolkit for Model Context Protocol servers.**
 
@@ -8,7 +12,7 @@ MCP servers expose tools and resources to model-authored calls. That creates sec
 boundaries around authorization, state handles, outbound requests, command execution,
 file access, and other ordinary system operations.
 
-MCP Guardian maps those boundaries and produces evidence for review rather than turning
+Vestigium maps those boundaries and produces evidence for review rather than turning
 every static match into a vulnerability claim.
 
 ## Current development line
@@ -42,8 +46,15 @@ Ground-truth checks use known vulnerable and fixed revisions where available.
 Dynamic validation is deliberately narrow and opt-in, with local/sandboxed targets and
 explicit recipes.
 
-The output can also be normalized for evidence-first research workflows such as ArgusSec,
+The output can also be normalized for research workflows such as Probandum,
 without turning an unexecuted candidate into a confirmed finding.
+
+## Measured state
+
+- 1,000 tests collected; 1,000 passed in 2313.19s.
+- GitHub CI succeeded on the same commit.
+
+*Measurements taken on 2026-09-28 at commit 1bea409 (origin/main).*
 
 ## Boundaries
 
@@ -52,4 +63,4 @@ without turning an unexecuted candidate into a confirmed finding.
 - Dynamic recipes are intentionally bounded; unsupported cases remain unresolved.
 - No external target is presented here as vulnerable merely because a rule matched.
 
-*Source status checked 2026-09-24.*
+*Source status checked 2026-09-28.*

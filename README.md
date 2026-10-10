@@ -48,12 +48,12 @@ specification, delegation to models, independent verification, mutation proof.
 | Project | What it does | Status |
 | --- | --- | --- |
 | [LLM Security–Usability Benchmark](projects/llm-security-usability-benchmark.md) | Pre-registered pilot on how conversational context changes risk interpretation for the same final prompt | Human QC in progress; **no model results yet** |
-| [MCP Guardian](projects/mcp-guardian.md) | Static + bounded dynamic security analysis for Model Context Protocol servers | Private, in development |
-| [BackFlowFuzz](projects/backflowfuzz.md) | Deterministic offline fuzzer for the LLM model-output trust boundary | Private, in development; three already-patched CVEs reproduced |
-| [ArgusSec](projects/argussec.md) | Evidence-first research workbench for AI and agent security | Private, in development |
+| [Vestigium](projects/vestigium.md) | Static + bounded dynamic security analysis for Model Context Protocol servers | Private, in development |
+| [Hostis](projects/hostis.md) | Deterministic offline fuzzer for the LLM model-output trust boundary | Private, in development; three already-patched CVEs reproduced |
+| [Probandum](projects/probandum.md) | Research workbench for AI and agent security | Private, in development |
 | [SlopLab](projects/sloplab.md) | Adversarial testing framework for vulnerability-report triage evaluators | Private, release-oriented benchmark |
 | [Partitür](projects/partitur.md) | Multi-model orchestration with a frozen outcome contract and evidence-bound audit | Private, in development |
-| [AI-OS](projects/ai-os.md) | Layered governance and record engine for AI-assisted project work | Private, baseline released |
+| [Tabularium](projects/tabularium.md) | Layered governance and record engine for AI-assisted project work | Private, baseline released |
 
 ## Security engineering
 

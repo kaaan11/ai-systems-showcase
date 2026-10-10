@@ -39,4 +39,8 @@ deterministic baseline rather than on a demo-only prototype.
 The implementation repository is currently private. Older showcase text that described
 it as public was stale and has been corrected here.
 
-*Repository visibility checked 2026-09-24.*
+## Measured state
+
+- 1,118 tests passed in 82.07s.
+
+*Measurements taken on 2026-09-28 at commit 5370ec0 (origin/main). Repository visibility checked 2026-09-24.*

@@ -1,4 +1,8 @@
-# BackFlowFuzz
+# Hostis
+
+*Renamed on 2026-09-28 from BackFlowFuzz. The code repository (BackFlowFuzz), package (backflowfuzz), and CLI (backflowfuzz) still use their existing names.*
+
+*Hostis* is Latin for “stranger” or “enemy”; it shares a root with *hospes*, meaning “guest” or “host.”
 
 **A deterministic, offline fuzzer for the LLM model-output trust boundary.**
 
@@ -8,7 +12,7 @@ Most fuzzing points at input. This project points at the return path from a mode
 provider into an application: response parsing, SSE streaming, tool-call decoding,
 argument conversion, and dispatch.
 
-BackFlowFuzz mutates valid model responses and records what the target application
+Hostis mutates valid model responses and records what the target application
 actually does with them. The core design treats a crash and a security impact as
 different outcomes.
 
@@ -24,6 +28,13 @@ vulnerabilities in real open-source projects:
 | CVE-2025-48887 | vLLM pythonic parser ReDoS | reproduced and measured |
 
 These are regression and ground-truth cases, **not original vulnerability discoveries**.
+
+## Measured state
+
+- 1,534 tests collected; the default selection runs 1,443, with 91 marked slow excluded.
+- Both self-hosted CI shards succeeded on the same commit.
+
+*Measurements taken on 2026-09-28 at commit d17ecaf (origin/main).*
 
 The project also preserves the earlier acceptance properties:
 
@@ -49,4 +60,4 @@ security effects, crash-only outcomes, and benign executions.
 - Already-patched public CVEs are used as ground truth; they are not claimed as discoveries.
 - Unpublished third-party findings, if any, are not exposed through this showcase.
 
-*Source status checked 2026-09-24.*
+*Source status checked 2026-09-28.*
